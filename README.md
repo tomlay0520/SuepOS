@@ -35,7 +35,7 @@ A simple, educational operating system for RISC-V architecture, designed and dev
 1.  Clone the repository (assuming it's hosted on a platform like GitHub/Gitee):
     ```bash
     git clone https://github.com/tomlay0520/SuepOS.git
-    cd suep-os
+    cd SuepOS
     ```
 
 2.  Build the kernel:
@@ -125,7 +125,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 1.  克隆代码库 (假设代码托管在 GitHub/Gitee 等平台):
     ```bash
     git clone https://github.com/tomlay0520/SuepOS.git
-    cd suep-os
+    cd SuepOS
     ```
 
 2.  编译内核:
