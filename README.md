@@ -34,7 +34,7 @@ A simple, educational operating system for RISC-V architecture, designed and dev
 
 1.  Clone the repository (assuming it's hosted on a platform like GitHub/Gitee):
     ```bash
-    git clone https://your-repo-url/suep-os.git
+    [git clone https://your-repo-url/suep-os.git](https://github.com/tomlay0520/SuepOS.git)
     cd suep-os
     ```
 
