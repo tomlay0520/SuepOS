@@ -32,7 +32,7 @@ A simple, educational operating system for RISC-V architecture, designed and dev
 
 #### Build and Run
 
-1.  Clone the repository (assuming it's hosted on a platform like GitHub/Gitee):
+1.  Clone the repository:
     ```bash
     git clone https://github.com/tomlay0520/SuepOS.git
     cd SuepOS
@@ -122,7 +122,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 #### 构建和运行
 
-1.  克隆代码库 (假设代码托管在 GitHub/Gitee 等平台):
+1.  克隆代码库:
     ```bash
     git clone https://github.com/tomlay0520/SuepOS.git
     cd SuepOS
