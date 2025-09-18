@@ -5,5 +5,6 @@ void start_kernel(void)
 {
     uart0_init();
     uart0_put_string("Hello, SUEP!\n");
+    uart0_put_string("suep@risc-v$ ");
     while(1);
 }
