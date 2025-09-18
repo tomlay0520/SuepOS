@@ -67,7 +67,7 @@
 #define uart_read_reg(reg) (*(UART_REG(reg)))
 #define uart_write_reg(reg, v) (*(UART_REG(reg)) = (v))
 
-void uart_init()
+void uart0_init()
 {
 	/* disable interrupts. */
 	uart_write_reg(IER, 0x00);
@@ -105,15 +105,15 @@ void uart_init()
 	uart_write_reg(LCR, lcr | (3 << 0));
 }
 
-int uart_putc(char ch)
+int uart0_put_char(char ch)
 {
 	while ((uart_read_reg(LSR) & LSR_TX_IDLE) == 0);
 	return uart_write_reg(THR, ch);
 }
 
-void uart_puts(char *s)
+void uart0_put_string(char *s)
 {
 	while (*s) {
-		uart_putc(*s++);
+		uart0_put_char(*s++);
 	}
 }

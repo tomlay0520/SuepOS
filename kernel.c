@@ -1,9 +1,9 @@
-extern void uart_init(void);
-extern void uart_puts(char *s);
+extern void uart0_init(void);
+extern void uart0_put_string(char *s);
 
 void start_kernel(void)
 {
-    uart_init();
-    uart_puts("Hello, SUEP!\n");
+    uart0_init();
+    uart0_put_string("Hello, SUEP!\n");
     while(1);
 }
