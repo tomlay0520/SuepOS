@@ -7,17 +7,18 @@ DEFS += -DCONFIG_SYSCALL
 endif
 
 
-DEFS +=
+DEFS += -D__MEMORY_S__
 
 CROSS_COMPILE = riscv64-unknown-elf-
 CFLAGS += -nostdlib -fno-builtin -g -Wall
 CFLAGS += -march=rv32g -mabi=ilp32
+CFLAGS += -Xlinker --defsym=__MEM_SIZE__=0x4000000  # 64MB
+
 
 QEMU = qemu-system-riscv32
 QFLAGS = -smp 1 -machine virt -bios none
 QFLAGS-nographic = -nographic -smp 1 -machine virt -bios none
 
-GDB = gdb-multiarch
 CC = ${CROSS_COMPILE}gcc
 OBJCOPY = ${CROSS_COMPILE}objcopy
 OBJDUMP = ${CROSS_COMPILE}objdump
@@ -36,7 +37,7 @@ BIN = ${OUTPUT_PATH}/os.bin
 
 USE_LINKER_SCRIPT ?= true
 ifeq (${USE_LINKER_SCRIPT}, true)
-LDFLAGS = -T ${OUTPUT_PATH}/os.ld.generated
+LDFLAGS = -T ${OUTPUT_PATH}/os.ld.generated -Wl,--no-warn-rwx-segments
 else
 LDFLAGS = -Ttext=0x80000000
 endif
@@ -56,7 +57,7 @@ ${OUTPUT_PATH}:
 # -x c tells GCC to treat your linker script as C source file
 ${ELF}: ${OBJS}
 ifeq (${USE_LINKER_SCRIPT}, true)
-	${CC} -E -P -x c ${DEFS} ${CFLAGS} os.ld > ${OUTPUT_PATH}/os.ld.generated
+	${CC} -E -P -x c ${DEFS} ${CFLAGS} linker.ld > ${OUTPUT_PATH}/os.ld.generated
 endif
 	${CC} ${CFLAGS} ${LDFLAGS} -o ${ELF} $^
 	${OBJCOPY} -O binary ${ELF} ${BIN}

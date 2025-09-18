@@ -1,5 +1,5 @@
 # SYSCALL = y
-USE_LINKER_SCRIPT = false
+USE_LINKER_SCRIPT = true
 
 SRCS_ASM = \
 	start.S \

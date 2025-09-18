@@ -1,0 +1,40 @@
+OUTPUT_ARCH("riscv")
+ENTRY(_start)
+MEMORY {
+    ram (wxa!ri) : ORIGIN = 0x80000000, LENGTH = DEFINED(__MEM_SIZE__) ? __MEM_SIZE__ : 64M
+}
+SECTIONS
+{
+    .text : {
+        PROVIDE(_text_entry = .);
+        *(.text .text.*)
+        PROVIDE(_text_end = .);
+    } >ram
+    .rodata : {
+        PROVIDE(_rodata_entry = .);
+        *(.rodata .rodata.*)
+        PROVIDE(_rodata_end = .);
+    } >ram
+    .data : {
+        . = ALIGN(4096);
+        PROVIDE(_data_entry = .);
+        *(.sdata .sdata.*)
+        *(.data .data.*)
+        PROVIDE(_data_end = .);
+    } >ram
+    .bss : {
+        PROVIDE(_bss_entry = .);
+        *(.sbss .sbss.*)
+        *(.bss .bss.*)
+        *(COMMON)
+        PROVIDE(_bss_end = .);
+    } >ram
+    .heap : {
+        PROVIDE(_heap_entry = .);
+        . = . + 0x10000;
+        PROVIDE(_heap_end = .);
+    } >ram
+    PROVIDE(_memory_start = ORIGIN(ram));
+    PROVIDE(_memory_end = ORIGIN(ram) + LENGTH(ram));
+    PROVIDE(_heap_size = _heap_end - _heap_entry);
+}

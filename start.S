@@ -1,36 +1,33 @@
-#include "platform.h"
+#include "hardware_conf.h"
 
-	# size of each hart's stack is 1024 bytes
-	.equ	STACK_SIZE, 1024
+    # Size of each hart's stack is 1024 bytes
+    .equ    STACK_SIZE, 1024
 
-	.global	_start
+    .global _start
 
-	.text
+    .text
 _start:
-	# park harts with id != 0
-	csrr	t0, mhartid		# read current hart id
-	mv	tp, t0				# keep CPU's hartid in its tp for later usage.
-	bnez	t0, park		# if we're not on the hart 0
-							# we park the hart
-	# Setup stacks, the stack grows from bottom to top, so we put the
-	# stack pointer to the very end of the stack range.
-	slli	t0, t0, 10		# shift left the hart id by 1024
-	la	sp, stacks + STACK_SIZE	# set the initial stack pointer
-							# to the end of the first stack space
-	add	sp, sp, t0			# move the current hart stack pointer
-							# to its place in the stack space
+    # Park harts with id != 0
+    csrr    t0, mhartid        # Read current hart id
+    mv      tp, t0             # Keep CPU's hartid in its tp for later usage
+    bnez    t0, park           # If we're not on hart 0, park the hart
 
-	j	start_kernel		# hart 0 jump to c
-						    # hart in risc v means a core
+    # Setup stacks for all harts
+    # Calculate stack top address for hart 0
+    la      sp, stacks + STACK_SIZE  # Set stack pointer to end of first stack
+    
+    # If you want to set up stacks for other harts too, you'd do it here
+    # but since we're parking them, only hart 0 needs a stack
+    
+    j       start_kernel       # Hart 0 jump to C code
 
 park:
-	wfi
-	j	park
+    wfi                        # Wait for interrupt
+    j       park               # Loop indefinitely
 
-	# In the standard RISC-V calling convention, the stack pointer sp
-	# is always 16-byte aligned.
-.balign 16
+    # Stack space allocation
+    .balign 16
 stacks:
-	.skip	STACK_SIZE * MAX_CPU # allocate space for all the harts stacks
+    .skip   STACK_SIZE * MAX_CPU  # Allocate space for all harts stacks
 
-	.end				# End of file
+    .end
