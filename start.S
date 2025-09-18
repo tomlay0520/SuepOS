@@ -21,6 +21,7 @@ _start:
 							# to its place in the stack space
 
 	j	start_kernel		# hart 0 jump to c
+						    # hart in risc v means a core
 
 park:
 	wfi
