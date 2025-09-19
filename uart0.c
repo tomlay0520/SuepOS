@@ -150,3 +150,12 @@ void mini_printf(const char *fmt, ...) {
     
     va_end(args);
 }
+
+void display_welcome()
+{                                          
+    mini_printf("   _|_|_|  _|    _|  _|_|_|_|  _|_|_|           _|_|      _|_|_|  \n");
+    mini_printf(" _|        _|    _|  _|        _|    _|       _|    _|  _|        \n");
+    mini_printf("   _|_|    _|    _|  _|_|_|    _|_|_|         _|    _|    _|_|    \n");
+    mini_printf("       _|  _|    _|  _|        _|             _|    _|        _|  \n");
+    mini_printf(" _|_|_|      _|_|    _|_|_|_|  _|               _|_|    _|_|_|    \n");          
+}
