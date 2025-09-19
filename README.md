@@ -1,5 +1,5 @@
 # SuepOS 
-# (Shanghai University of Electric Power Operating System)
+## Shanghai University of Electric Power Operating System
 
 [English](#suepos-shanghai-university-of-electric-power-os-1) | [中文](#suepos-上海电力大学操作系统)
 
