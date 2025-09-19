@@ -31,7 +31,7 @@
 .global _heap_start
 .global _heap_end
 
-# 为C代码提供访问接口
+# provide interface for c codes.
 .global TEXT_ENTRY
 TEXT_ENTRY: .word  _text_start
 
