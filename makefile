@@ -7,5 +7,7 @@ SRCS_ASM = \
 SRCS_C = \
 	kernel.c \
 	uart0.c \
+	page_alloc.c \
+
 
 include qemu_gcc.mk

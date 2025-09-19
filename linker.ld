@@ -1,3 +1,8 @@
+/*
+    it is the linker script,
+    aiming to map the sections of kernel to someplace of RAM.
+*/
+
 OUTPUT_ARCH("riscv")
 ENTRY(_start)
 

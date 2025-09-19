@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.java": "bat",
+        "kernel_func.h": "c",
+        "hardware_conf.h": "c",
+        "type.h": "c"
+    }
+}
