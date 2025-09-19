@@ -72,6 +72,27 @@ os/
 └── Makefile
 ```
 
+### memory layout (kernel):
+```
+ Memory Layout:
+ 0x80000000 +-----------------+
+            |     .text       | TEXT SEGMENT
+            +-----------------+
+            |    .rodata      | READ-ONLY DATA SEGMENT
+            +-----------------+
+            |     .data       | DATA SEGMENT
+            +-----------------+
+            |      .bss       | BSS SEGMENT AUTO-INITIALIZED TO ZERO
+            +-----------------+
+            |      heap       | DYNAMIC MEMORY ALLOCATION
+            |                 | 
+            +-----------------+
+            |  available RAM  | FREE FOR OTHER USES
+ 0x84000000 +-----------------+  (0x80000000 + 64MB)
+```
+
+
+
 ### References & Further Reading
 
 *   **The RISC-V Instruction Set Manual**
@@ -160,6 +181,25 @@ os/
 ├── type.h
 ├── uart0.c
 └── Makefile
+```
+
+### 内存映射 （内核）
+```
+内存布局:
+ 0x80000000 +-----------------+
+            |     .text       | TEXT SEGMENT
+            +-----------------+
+            |    .rodata      | READ-ONLY DATA SEGMENT
+            +-----------------+
+            |     .data       | DATA SEGMENT
+            +-----------------+
+            |      .bss       | BSS SEGMENT AUTO-INITIALIZED TO ZERO
+            +-----------------+
+            |      heap       | DYNAMIC MEMORY ALLOCATION
+            |                 | 
+            +-----------------+
+            |  available RAM  | FREE FOR OTHER USES
+ 0x84000000 +-----------------+  (0x80000000 + 64MB)
 ```
 
 ### 参考资料与延伸阅读
