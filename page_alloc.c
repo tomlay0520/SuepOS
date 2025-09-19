@@ -22,7 +22,8 @@ static inline ptr align_page(ptr addr) {
     return (addr + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
 }
 
-// initialize the page allocator
+// initialize the page allocator, 
+// it will do initialization work.
 void init_page_allocator() {
     mini_printf("Initializing page allocator...\n");
     

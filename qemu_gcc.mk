@@ -32,12 +32,12 @@ OBJS_ASM := $(addprefix ${OUTPUT_PATH}/, $(patsubst %.S, %.o, ${SRCS_ASM}))
 OBJS_C   := $(addprefix $(OUTPUT_PATH)/, $(patsubst %.c, %.o, ${SRCS_C}))
 OBJS = ${OBJS_ASM} ${OBJS_C}
 
-ELF = ${OUTPUT_PATH}/os.elf
-BIN = ${OUTPUT_PATH}/os.bin
+ELF = ${OUTPUT_PATH}/suepos.elf
+BIN = ${OUTPUT_PATH}/suepos.bin
 
 USE_LINKER_SCRIPT ?= true
 ifeq (${USE_LINKER_SCRIPT}, true)
-LDFLAGS = -T ${OUTPUT_PATH}/os.ld.generated -Wl,--no-warn-rwx-segments
+LDFLAGS = -T ${OUTPUT_PATH}/kernel.ld.generated -Wl,--no-warn-rwx-segments
 else
 LDFLAGS = -Ttext=0x80000000
 endif
@@ -57,7 +57,7 @@ ${OUTPUT_PATH}:
 # -x c tells GCC to treat your linker script as C source file
 ${ELF}: ${OBJS}
 ifeq (${USE_LINKER_SCRIPT}, true)
-	${CC} -E -P -x c ${DEFS} ${CFLAGS} linker.ld > ${OUTPUT_PATH}/os.ld.generated
+	${CC} -E -P -x c ${DEFS} ${CFLAGS} linker.ld > ${OUTPUT_PATH}/kernel.ld.generated
 endif
 	${CC} ${CFLAGS} ${LDFLAGS} -o ${ELF} $^
 	${OBJCOPY} -O binary ${ELF} ${BIN}
