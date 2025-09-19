@@ -1,40 +1,46 @@
 OUTPUT_ARCH("riscv")
 ENTRY(_start)
-MEMORY {
+MEMORY
+{
     ram (wxa!ri) : ORIGIN = 0x80000000, LENGTH = DEFINED(__MEM_SIZE__) ? __MEM_SIZE__ : 64M
 }
 SECTIONS
 {
     .text : {
-        PROVIDE(_text_entry = .);
+        PROVIDE(_text_start = .);
+        *(.text.init)
         *(.text .text.*)
         PROVIDE(_text_end = .);
     } >ram
     .rodata : {
-        PROVIDE(_rodata_entry = .);
+        PROVIDE(_rodata_start = .);
         *(.rodata .rodata.*)
+        *(.srodata .srodata.*)
         PROVIDE(_rodata_end = .);
     } >ram
     .data : {
-        . = ALIGN(4096);
-        PROVIDE(_data_entry = .);
+        PROVIDE(_data_start = .);
         *(.sdata .sdata.*)
         *(.data .data.*)
         PROVIDE(_data_end = .);
     } >ram
     .bss : {
-        PROVIDE(_bss_entry = .);
+        PROVIDE(_bss_start = .);
         *(.sbss .sbss.*)
         *(.bss .bss.*)
         *(COMMON)
         PROVIDE(_bss_end = .);
     } >ram
-    .heap : {
-        PROVIDE(_heap_entry = .);
-        . = . + 0x10000;
-        PROVIDE(_heap_end = .);
+    . = ALIGN(4096);
+    PROVIDE(_heap_start = .);
+    . = . + 0x100000;
+    PROVIDE(_heap_end = .);
+    .stack : ALIGN(16) {
+        PROVIDE(_stack_start = .);
+        . = . + 0x4000;
+        PROVIDE(_stack_end = .);
     } >ram
     PROVIDE(_memory_start = ORIGIN(ram));
     PROVIDE(_memory_end = ORIGIN(ram) + LENGTH(ram));
-    PROVIDE(_heap_size = _heap_end - _heap_entry);
+    PROVIDE(_heap_size = _heap_end - _heap_start);
 }

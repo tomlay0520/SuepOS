@@ -1,5 +1,6 @@
 #include "type.h"
 #include "hardware_conf.h"
+#include <stdarg.h>
 
 /*
  * The UART control registers are memory-mapped at address UART0. 
@@ -60,4 +61,92 @@ void uart0_put_string(char *s)
 	while (*s) {
 		uart0_put_char(*s++);
 	}
+}
+
+static void uart0_put_number(uint32_t num, int base) {
+    char buffer[32];
+    char *ptr = buffer;
+    
+    if (num == 0) {
+        uart0_put_char('0');
+        return;
+    }
+    
+    while (num > 0) {
+        int digit = num % base;
+        *ptr++ = (digit < 10) ? ('0' + digit) : ('a' + digit - 10);
+        num /= base;
+    }
+    
+    while (ptr > buffer) {
+        uart0_put_char(*--ptr);
+    }
+}
+static void uart0_put_string_internal(const char *s) {
+    while (*s) {
+        uart0_put_char(*s++);
+    }
+}
+
+void mini_printf(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    
+    while (*fmt) {
+        if (*fmt == '%') {
+            fmt++;
+            switch (*fmt) {
+                case 's': {
+                    const char *str = va_arg(args, const char *);
+                    uart0_put_string_internal(str);
+                    break;
+                }
+                case 'c': {
+                    char c = (char)va_arg(args, int);
+                    uart0_put_char(c);
+                    break;
+                }
+                case 'd': {
+                    int num = va_arg(args, int);
+                    if (num < 0) {
+                        uart0_put_char('-');
+                        num = -num;
+                    }
+                    uart0_put_number((uint32_t)num, 10);
+                    break;
+                }
+                case 'u': {
+                    uint32_t num = va_arg(args, uint32_t);
+                    uart0_put_number(num, 10);
+                    break;
+                }
+                case 'x': {
+                    uint32_t num = va_arg(args, uint32_t);
+                    uart0_put_string_internal("0x");
+                    uart0_put_number(num, 16);
+                    break;
+                }
+                case 'p': {
+                    void *p = va_arg(args, void *);
+                    uart0_put_string_internal("0x");
+                    uart0_put_number((ptr)p, 16); 
+                    break;
+                }
+                case '%': {
+                    uart0_put_char('%');
+                    break;
+                }
+                default: {
+                    uart0_put_char('%');
+                    uart0_put_char(*fmt);
+                    break;
+                }
+            }
+        } else {
+            uart0_put_char(*fmt);
+        }
+        fmt++;
+    }
+    
+    va_end(args);
 }

@@ -20,38 +20,46 @@
 #            |  available RAM  | FREE FOR OTHER USES
 # 0x84000000 +-----------------+  (0x80000000 + 64MB)
 
+.global _text_start
+.global _text_end
+.global _rodata_start
+.global _rodata_end
+.global _data_start
+.global _data_end
+.global _bss_start
+.global _bss_end
+.global _heap_start
+.global _heap_end
 
-.gloabal HEAP_ENTRY # it means the start address of the heap, 
-                    # which will be defined in the linker script.
-HEAP_ENTRY: .word  _heap_entry # it is a label, 
-                               # which can be used to refer to the address of the heap start.
-
-.global HEAP_END
-HEAP_END: .word  _heap_end
-
+# 为C代码提供访问接口
 .global TEXT_ENTRY
-TEXT_ENTRY: .word  _text_entry
+TEXT_ENTRY: .word  _text_start
 
 .global TEXT_END
 TEXT_END: .word  _text_end
 
+.global RODATA_ENTRY
+RODATA_ENTRY: .word  _rodata_start
+
+.global RODATA_END
+RODATA_END: .word  _rodata_end
+
 .global DATA_ENTRY
-DATA_ENTRY: .word  _data_entry
+DATA_ENTRY: .word  _data_start
 
 .global DATA_END
 DATA_END: .word  _data_end
 
 .global BSS_ENTRY
-BSS_ENTRY: .word  _bss_entry
+BSS_ENTRY: .word  _bss_start
 
 .global BSS_END
 BSS_END: .word  _bss_end
 
-.global RODATA_ENTRY
-RODATA_ENTRY: .word  _rodata_entry
+.global HEAP_ENTRY
+HEAP_ENTRY: .word  _heap_start
 
-.global RODATA_END
-RODATA_END: .word  _rodata_end
-
+.global HEAP_END
+HEAP_END: .word  _heap_end
 
 #endif

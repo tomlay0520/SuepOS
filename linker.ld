@@ -6,53 +6,65 @@
 OUTPUT_ARCH("riscv")
 ENTRY(_start)
 
-MEMORY {
-    ram (wxa!ri) : ORIGIN = 0x80000000, LENGTH = DEFINED(__MEM_SIZE__) ? __MEM_SIZE__ : 64M
+MEMORY
+{
+    ram   (wxa!ri) : ORIGIN = 0x80000000, LENGTH = DEFINED(__MEM_SIZE__) ? __MEM_SIZE__ : 64M
 }
 
 SECTIONS
 {
-    /* text seg */
+    /* text segment */
     .text : {
-        PROVIDE(_text_entry = .);    /* the start address of text seg */
+        PROVIDE(_text_start = .);
+        *(.text.init)
         *(.text .text.*)
-        PROVIDE(_text_end = .);      /* the end address of text seg */
+        PROVIDE(_text_end = .);
     } >ram
 
-    /* read-only seg */
+    /* read-only segment */
     .rodata : {
-        PROVIDE(_rodata_entry = .);  /* the start address of read-only seg */
+        PROVIDE(_rodata_start = .);
         *(.rodata .rodata.*)
-        PROVIDE(_rodata_end = .);    /* the end address of read-only seg */
+        *(.srodata .srodata.*)
+        PROVIDE(_rodata_end = .);
     } >ram
 
-    /* data seg */
+    /* data segment */
     .data : {
-        . = ALIGN(4096);
-        PROVIDE(_data_entry = .);    /* the start address of data seg */
+        PROVIDE(_data_start = .);
         *(.sdata .sdata.*)
         *(.data .data.*)
-        PROVIDE(_data_end = .);      /* the end address of data seg */
+        PROVIDE(_data_end = .);
     } >ram
 
-    /* BSS seg） */
+    /* BSS segment */
     .bss : {
-        PROVIDE(_bss_entry = .);     /* the start address of bss seg */
+        PROVIDE(_bss_start = .);
         *(.sbss .sbss.*)
         *(.bss .bss.*)
         *(COMMON)
-        PROVIDE(_bss_end = .);       /* the start address of bss seg */
+        PROVIDE(_bss_end = .);
     } >ram
 
-    /* heap def */
-    .heap : {
-        PROVIDE(_heap_entry = .);    /* the start address of heap */
-        . = . + 0x10000;             /* 64KB heap size */
-        PROVIDE(_heap_end = .);      /* the end address of heap */
+    /* Heap starts right after BSS */
+    . = ALIGN(4096);
+    PROVIDE(_heap_start = .);
+    
+    /* Reserve some space for heap */
+    . = . + 0x100000; /* 1MB heap */
+    PROVIDE(_heap_end = .);
+
+    /* Stack space */
+    .stack : ALIGN(16) {
+        PROVIDE(_stack_start = .);
+        . = . + 0x4000; /* 16KB stack */
+        PROVIDE(_stack_end = .);
     } >ram
 
+    /* Memory boundaries */
     PROVIDE(_memory_start = ORIGIN(ram));
     PROVIDE(_memory_end = ORIGIN(ram) + LENGTH(ram));
 
-    PROVIDE(_heap_size = _heap_end - _heap_entry);
+    /* Heap size calculation */
+    PROVIDE(_heap_size = _heap_end - _heap_start);
 }

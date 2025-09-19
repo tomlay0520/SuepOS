@@ -3,6 +3,7 @@
         "*.java": "bat",
         "kernel_func.h": "c",
         "hardware_conf.h": "c",
-        "type.h": "c"
+        "type.h": "c",
+        "mem_info.h": "c"
     }
 }

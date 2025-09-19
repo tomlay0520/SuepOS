@@ -3,6 +3,7 @@ USE_LINKER_SCRIPT = true
 
 SRCS_ASM = \
 	start.S \
+	mem_info.S\
 
 SRCS_C = \
 	kernel.c \
