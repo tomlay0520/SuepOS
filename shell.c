@@ -40,9 +40,10 @@ void execute_command(int argc, char *argv[])
             return;
         }
     }
-    
-    uart0_put_string("command not found, please do resgistration.\n");
+    uart0_put_string("'");
     uart0_put_string(argv[0]);
+    uart0_put_string("'");
+    uart0_put_string(" command not found, please do resgistration.");
     uart0_put_string("\ninput 'help' to check all commands.\n");
 }
 
@@ -95,7 +96,7 @@ void shell(void)
     uart0_put_string("input 'help' to cheack all commands.\n");
     
     while (1) {
-        uart0_put_string("kernel@SuepOS ");
+        uart0_put_string("kernel@SuepOS: ");
         readline(line, MAX_CMD_LENGTH);
         
         argc = parse_command(line, argv);
