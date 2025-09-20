@@ -4,6 +4,7 @@
         "kernel_func.h": "c",
         "hardware_conf.h": "c",
         "type.h": "c",
-        "mem_info.h": "c"
+        "mem_info.h": "c",
+        "cmd_table.h": "c"
     }
 }

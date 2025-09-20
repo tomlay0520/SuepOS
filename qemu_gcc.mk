@@ -16,7 +16,7 @@ CFLAGS += -Xlinker --defsym=__MEM_SIZE__=0x4000000  # 64MB
 
 
 QEMU = qemu-system-riscv32
-QFLAGS = -smp 1 -machine virt -bios none
+QFLAGS = -smp 1 -machine virt -bios none -device virtio-gpu-device
 QFLAGS-nographic = -nographic -smp 1 -machine virt -bios none
 
 CC = ${CROSS_COMPILE}gcc
@@ -74,6 +74,8 @@ run: all
 	@echo "Press Ctrl-A and then X to exit QEMU"
 	@echo "------------------------------------"
 	@${QEMU} ${QFLAGS-nographic} -kernel ${ELF}
+
+
 
 .PHONY : code
 code: all

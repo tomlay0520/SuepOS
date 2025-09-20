@@ -11,4 +11,14 @@ typedef unsigned char uint8_t;
 typedef uint32_t ptr;
 typedef uint32_t reg;
 
+typedef struct command
+{
+    /* data */
+    const char* name;
+    void (*func)(int argc, char* argv[]);
+    const char* help;
+}command;
+
+
+
 #endif 

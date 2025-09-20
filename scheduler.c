@@ -1,6 +1,8 @@
 #include "kernel_func.h"
 #define STACK_LENGTH 1024
 
+extern void shell();
+
 static void my_mscratch(reg re)
 {
     asm volatile("csrw mscratch, %0" : : "r" (re));
@@ -9,6 +11,7 @@ static void my_mscratch(reg re)
 void user_first_process(void)
 {
     mini_printf("hello from user mode!\n");
+    shell();
     while(1); // stop here!
 }
 

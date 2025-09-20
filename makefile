@@ -11,6 +11,7 @@ SRCS_C = \
 	uart0.c \
 	page_alloc.c \
 	scheduler.c \
+	shell.c \
 
 
 include qemu_gcc.mk

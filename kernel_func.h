@@ -10,6 +10,8 @@ extern void uart0_put_char(char ch);
 extern void uart0_put_string(char *s);
 extern void mini_printf(const char *fmt, ...);
 extern void display_welcome();
+extern char uart0_get_char(void);
+extern void readline(char *buffer, int max_length);
 
 // memory management functions
 extern void init_page_allocator();

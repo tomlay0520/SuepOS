@@ -32,11 +32,11 @@
 	* OP2 = High  RTS = High DTR = High
 	* RXRDY = High TXRDY = Low INT = Low
  */
-#define LSR_RX_READY (1 << 0)
-#define LSR_TX_IDLE  (1 << 5)
+#define LSR_RX_READY (1 << 0) // receive data ready.
+#define LSR_TX_IDLE  (1 << 5) // keep sending reg leisure.
 
-#define uart_read_reg(reg) (*(UART_REG(reg)))
-#define uart_write_reg(reg, v) (*(UART_REG(reg)) = (v))
+#define uart_read_reg(reg) (*(UART_REG(reg))) // macro read regs.
+#define uart_write_reg(reg, v) (*(UART_REG(reg)) = (v)) // macro write regs.
 
 void uart0_init()
 {
@@ -62,6 +62,14 @@ void uart0_put_string(char *s)
 		uart0_put_char(*s++);
 	}
 }
+
+// SPINNING GET
+char uart0_get_char(void)
+{
+    while((uart_read_reg(LSR) & LSR_RX_READY) == 0);
+    return uart_read_reg(RHR);
+}
+
 
 static void uart0_put_number(uint32_t num, int base) {
     char buffer[32];
@@ -150,7 +158,6 @@ void mini_printf(const char *fmt, ...) {
     
     va_end(args);
 }
-
 void display_welcome()
 {                                          
     mini_printf("   _|_|_|  _|    _|  _|_|_|_|  _|_|_|           _|_|      _|_|_|  \n");
@@ -159,3 +166,51 @@ void display_welcome()
     mini_printf("       _|  _|    _|  _|        _|             _|    _|        _|  \n");
     mini_printf(" _|_|_|      _|_|    _|_|_|_|  _|               _|_|    _|_|_|    \n");          
 }
+
+int strcmp(const char *s1, const char *s2)
+{
+    while (*s1 && (*s1 == *s2)) {
+        s1++;
+        s2++;
+    }
+    return *(unsigned char *)s1 - *(unsigned char *)s2;
+}
+
+int strlen(const char *s)
+{
+    int len = 0;
+    while (*s++) len++;
+    return len;
+}
+
+void readline(char *buffer, int max_length)
+{
+    int i = 0;
+    char c;
+    
+    while (i < max_length - 1) {
+        c = uart0_get_char();
+        
+        if (c == '\b' || c == 127) {
+            if (i > 0) {
+                i--;
+                uart0_put_char('\b');
+                uart0_put_char(' ');
+                uart0_put_char('\b');
+            }
+            continue;
+        }
+        if (c == '\r' || c == '\n') {
+            uart0_put_char('\r');
+            uart0_put_char('\n');
+            buffer[i] = '\0';
+            return;
+        }
+    
+        uart0_put_char(c);
+        buffer[i++] = c;
+    }
+    
+    buffer[max_length - 1] = '\0';
+}
+

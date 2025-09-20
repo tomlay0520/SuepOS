@@ -60,12 +60,8 @@ void start_kernel(void)
     // EVERY MODULE YOU WRITE MUST BE INITIALIZED HERE
     // FOR EXAMPLE, TO INITIALIZE UART0, CALL THE FUNCTION uart0_init()
     uart0_init();
-    // mini_printf("Hello, SUEP!\n");
-    display_welcome();
-                                                                  
-                                                                                
-                                                       
     mini_printf("Kernel is starting...\n");
+    display_welcome();
 
     init_page_allocator();
     // page_test();
