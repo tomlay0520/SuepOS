@@ -37,21 +37,21 @@ you should know that:
 
 
 /*
-# Main Memoryof kernel Layout:
-# 0x80000000 +-----------------+
-#            |     .text       | TEXT SEGMENT
-#            +-----------------+
-#            |    .rodata      | READ-ONLY DATA SEGMENT
-#            +-----------------+
-#            |     .data       | DATA SEGMENT
-#            +-----------------+
-#            |      .bss       | BSS SEGMENT AUTO-INITIALIZED TO ZERO
-#            +-----------------+
-#            |      heap       | DYNAMIC MEMORY ALLOCATION
-#            |                 | 
-#            +-----------------+
-#            |  available RAM  | FREE FOR OTHER USES
-# 0x84000000 +-----------------+  (0x80000000 + 64MB)
+    # Main Memoryof kernel Layout:
+    # 0x80000000 +-----------------+
+    #            |     .text       | TEXT SEGMENT
+    #            +-----------------+
+    #            |    .rodata      | READ-ONLY DATA SEGMENT
+    #            +-----------------+
+    #            |     .data       | DATA SEGMENT
+    #            +-----------------+
+    #            |      .bss       | BSS SEGMENT AUTO-INITIALIZED TO ZERO
+    #            +-----------------+
+    #            |      heap       | DYNAMIC MEMORY ALLOCATION
+    #            |                 | 
+    #            +-----------------+
+    #            |  available RAM  | FREE FOR OTHER USES
+    # 0x84000000 +-----------------+  (0x80000000 + 64MB)
 */
 
 void start_kernel(void)
