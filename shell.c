@@ -83,6 +83,11 @@ void cmd_info(int argc, char *argv[])
     uart0_put_string("ARCH: RV64\n");
 }
 
+// void cmd_exec(int argc, char *argv[])
+// {
+
+// }
+
 void shell(void)
 {
     char line[MAX_CMD_LENGTH];
@@ -92,7 +97,7 @@ void shell(void)
     // 初始化UART
     uart0_init();
     
-    uart0_put_string("\nRISC-V OS Shell v1.0\n");
+    uart0_put_string("\nSuep OS Shell v1.0\n");
     uart0_put_string("input 'help' to cheack all commands.\n");
     
     while (1) {
