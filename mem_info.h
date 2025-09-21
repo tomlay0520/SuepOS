@@ -19,16 +19,6 @@ extern ptr BSS_END;
 extern ptr HEAP_ENTRY;
 extern ptr HEAP_END;
 
-// extern uint32_t TEXT_ENTRY;
-// extern uint32_t TEXT_END;
-// extern uint32_t RODATA_ENTRY;
-// extern uint32_t RODATA_END;
-// extern uint32_t DATA_ENTRY;
-// extern uint32_t DATA_END;
-// extern uint32_t BSS_ENTRY;
-// extern uint32_t BSS_END;
-// extern uint32_t HEAP_ENTRY;
-// extern uint32_t HEAP_END;
 
 
 static ptr ALLOCATE_START = 0;

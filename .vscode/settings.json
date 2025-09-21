@@ -5,6 +5,7 @@
         "hardware_conf.h": "c",
         "type.h": "c",
         "mem_info.h": "c",
-        "cmd_table.h": "c"
+        "cmd_table.h": "c",
+        "stddef.h": "c"
     }
 }

@@ -20,9 +20,21 @@ extern void page_free(void *p);
 extern void page_test();
 extern void page_stats();
 
+
+// scheduler (process aka HART management)
+extern int CREATE_A_PROCESS();
+extern void delay(int count);
+extern void test_task01(void);
+extern void test_task02(void);
+extern void process_give_up(void);
+extern void shell(void);
+
+
+
+
 // process management functions
 extern void scheduler_init(void);
-extern void schedule(void);
+extern void scheduler(void);
 
 typedef struct GPRegister_context
 {

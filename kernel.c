@@ -66,7 +66,13 @@ void start_kernel(void)
     init_page_allocator();
     // page_test();
     scheduler_init();
-    schedule();
+    // CREATE_A_PROCESS(shell);
+    // CREATE_A_PROCESS(test_task01);
+    // CREATE_A_PROCESS(shell);
+    CREATE_A_PROCESS(test_task01);
+    CREATE_A_PROCESS(test_task02);
+    mini_printf("here?\n");
+    scheduler();
     mini_printf("GUESS WHAT NOBODY CARES!\n");
     while(1); // stop here
 }
