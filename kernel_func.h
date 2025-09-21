@@ -4,6 +4,8 @@
 #include <stddef.h> 
 
 
+
+
 // UART0 functions
 extern void uart0_init(void);
 extern void uart0_put_char(char ch);
@@ -26,6 +28,7 @@ extern int CREATE_A_PROCESS();
 extern void delay(int count);
 extern void test_task01(void);
 extern void test_task02(void);
+extern void test_task03(void);
 extern void process_give_up(void);
 extern void shell(void);
 

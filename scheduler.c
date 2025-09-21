@@ -1,70 +1,193 @@
 #include "kernel_func.h"
-#define STACK_LENGTH 1024
-#define MAX_PROCESS 5
+#include "mem_info.h"
+#define STACK_LENGTH 1024    // Maximum length of the process stack (bytes)
+#define MAX_PROCESS 5        // Maximum number of concurrent processes supported
 
+// Enumeration defining possible process states
+typedef enum {
+    PROC_READY,       
+    PROC_RUNNING,     
+    PROC_BLOCKED,    
+    PROC_FINISHED     
+} ProcState;
 
+// Process Control Block (PCB) structure - manages all information for a process
+typedef struct PCB {
+    void (*entry)(void);       // Pointer to the process's entry function (where execution starts)
+    CONTEXT context;           // Stores register states for context switching
+    uint8_t* stack;            // Base address of the process's stack
+    ProcState state;           // Current state of the process (READY/RUNNING/etc.)
+    int pid;                   // Unique Process ID for identification
+    struct PCB* next;          // Pointer to next PCB in the scheduling queue (for linked list)
+} PCB;
+
+// Process queue structure - manages a FIFO queue of PCBs for scheduling
+typedef struct {
+    PCB* head;                 // Pointer to the first PCB in the queue
+    PCB* tail;                 // Pointer to the last PCB in the queue
+    int count;                 // Current number of PCBs in the queue
+} ProcQueue;
+
+// External declarations for functions and symbols from other files
 extern void shell();
+static void my_mscratch(reg re);
+void user_first_process(void);
+int CREATE_A_PROCESS(void (*s)(void));
+void scheduler_init(void);
+void process_give_up(void);
+void scheduler(void);
+void delay(int count);
 
-static void my_mscratch(reg re)
-{
-    asm volatile("csrw mscratch, %0" : : "r" (re));
+/**
+ * Sets the mscratch register (RISC-V specific)
+ * mscratch is a machine-mode register often used to store context pointers
+ * @param re Value to write to the mscratch register
+ */
+static void my_mscratch(reg re) {
+    asm volatile("csrw mscratch, %0" : : "r" (re));  // CSRW = Control/Status Register Write
 }
 
-void user_first_process(void)
-{
-    mini_printf("hello from user mode!\n");
-    shell();
-    while(1); // stop here!
+/**
+ * First user-mode process implementation
+ * Prints a message, launches the shell, and enters an infinite loop
+ */
+void user_first_process(void) {
+    mini_printf("hello from user mode!\n");  // Print user mode message
+    shell();                                 // Launch the shell interface
+    while(1);                                // Halt execution after shell exits
 }
 
-uint8_t process_stack[MAX_PROCESS][STACK_LENGTH];
-CONTEXT context_array[MAX_PROCESS];
-extern void switch_to_context(CONTEXT* next); // you can check it in switch.S
-static int stack_pointer = 0;
-static int base_pointer = -1;
+// Global scheduler state
+static ProcQueue pcb_queue;               // Main queue of processes for scheduling
+static PCB pcb_pool[MAX_PROCESS];         // Preallocated pool of PCBs (avoids dynamic allocation)
+static int next_pid = 1;                  // Counter for generating unique PIDs
+static PCB* current_running = NULL;       // Pointer to the currently executing process
 
-int CREATE_A_PROCESS(void (*s)(void))
-{
-    if (stack_pointer < MAX_PROCESS){
-        // mini_printf("stack pointer: %x\n", &stack_pointer);
-        // mini_printf("base  pointer: %x\n", &base_pointer);
-        context_array[stack_pointer].sp = (reg) &process_stack[stack_pointer][STACK_LENGTH - 1];
-        context_array[stack_pointer].ra = (reg) s;
-        stack_pointer += 1;
-        return 1; // 1 means success.
-    } else return 0;
-    // 0 means failed.
+/**
+ * Initializes the process queue to an empty state
+ */
+static void init_queue() {
+    pcb_queue.head = NULL;    // No head initially
+    pcb_queue.tail = NULL;    // No tail initially
+    pcb_queue.count = 0;      // Zero processes in queue
 }
 
-void scheduler_init(void)
-{
-    my_mscratch(0);
+/**
+ * Adds a PCB to the end of the process queue (FIFO order)
+ * @param pcb Pointer to the PCB to add to the queue
+ */
+static void enqueue(PCB* pcb) {
+    if (!pcb_queue.head) {                // If queue is empty
+        pcb_queue.head = pcb;             // New PCB becomes both head and tail
+        pcb_queue.tail = pcb;
+    } else {
+        pcb_queue.tail->next = pcb;       // Link current tail to new PCB
+        pcb_queue.tail = pcb;             // Update tail to new PCB
+    }
+    pcb->next = NULL;                     // Ensure new tail has no next pointer
+    pcb_queue.count++;                    // Increment process count
 }
 
-void process_give_up(void)
-{
-    // give up the current process, and let others ocupy HART
-    scheduler();
+/**
+ * Removes and returns the PCB at the front of the process queue
+ * @return Pointer to the removed PCB, or NULL if queue is empty
+ */
+static PCB* dequeue() {
+    if (!pcb_queue.head) return NULL;     // Return NULL if queue is empty
+    
+    PCB* front = pcb_queue.head;          // Store pointer to current head
+    pcb_queue.head = front->next;         // Update head to next PCB in queue
+    
+    if (!pcb_queue.head) {                // If queue is now empty
+        pcb_queue.tail = NULL;            // Clear tail pointer
+    }
+    
+    pcb_queue.count--;                    // Decrement process count
+    front->next = NULL;                   // Detach from queue
+    return front;                         // Return the removed PCB
 }
 
+/**
+ * Creates a new process and adds it to the scheduling queue
+ * @param s Pointer to the process's entry function
+ * @return 1 on success, 0 on failure (max processes reached or stack allocation failed)
+ */
+int CREATE_A_PROCESS(void (*s)(void)) {
+    if (pcb_queue.count >= MAX_PROCESS)   
+        return 0;
 
-void scheduler()
-{
-    if (stack_pointer <= 0){        
+    // Allocate a stack page for the new process (using page allocator)
+    void* stack_page = page_alloc(1);
+    if (!stack_page) return 0;            // Return failure if stack allocation fails
+
+    // Get a PCB from the preallocated pool
+    PCB* pcb = &pcb_pool[pcb_queue.count];
+    pcb->pid = next_pid++;                // Assign unique PID
+    pcb->entry = s;                       
+    pcb->stack = stack_page;             
+    pcb->state = PROC_READY;              
+
+    // Initialize context: set stack pointer to top of stack (grows downward on RISC-V)
+    pcb->context.sp = (reg)(stack_page + PAGE_SIZE - 1);  
+    pcb->context.ra = (reg)s;                             
+
+    mini_printf("Created process %d, stack at: 0x%x\n", pcb->pid, stack_page);
+    enqueue(pcb);                         // Add new process to scheduling queue
+    return 1;                             // Return success
+}
+
+/**
+ * Initializes the scheduler subsystem
+ */
+void scheduler_init(void) {
+    my_mscratch(0);       // Initialize mscratch register
+    init_queue();         // Initialize process queue
+}
+
+/**
+ * Voluntarily yields the CPU to another process
+ * Called by a running process to give up execution time
+ */
+void process_give_up(void) {
+    if (current_running) {
+        current_running->state = PROC_READY;  // Mark current process as READY
+        enqueue(current_running);             // Add back to scheduling queue
+    }
+    scheduler();  // Trigger scheduler to select next process
+}
+
+/**
+ * Scheduler: selects the next process to run and performs context switch
+ * Implements a round-robin scheduling policy
+ */
+void scheduler() {
+    if (pcb_queue.count <= 0) {  // Check if no processes are available
         mini_printf("PANIC: NO PROCESS!!!\n");
         return;   
     }
 
-    base_pointer = (base_pointer + 1) % stack_pointer;
-    CONTEXT* next_ctx = &(context_array[base_pointer]);
-    switch_to_context(next_ctx);
+    // Get next process from the front of the queue
+    PCB* next = dequeue();
+    if (!next) return;
 
+    // Update states: current process (if exists) becomes READY, next becomes RUNNING
+    if (current_running) {
+        current_running->state = PROC_READY;
+    }
+    next->state = PROC_RUNNING;
+    current_running = next;  // Update current running process
+
+    // Switch CPU context to the next process (implemented in assembly)
+    switch_to_context(&next->context);
 }
 
-void delay(int count)
-{
-    const int iterations = 50000;
+/**
+ * Simple delay function using busy waiting
+ * @param count Number of delay iterations
+ */
+void delay(int count) {
+    const int iterations = 50000;  // Inner loop iterations per count
     while (count--) {
-        for (volatile int i = 0; i < iterations; i++);
+        for (volatile int i = 0; i < iterations; i++);  // Volatile prevents optimization
     }
 }

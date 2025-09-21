@@ -11,3 +11,9 @@ void test_task02(void){
     delay(5000);
     process_give_up();
 }
+
+void test_task03(void){
+    mini_printf("hello world!\n");
+    delay(5000);
+    process_give_up();
+}

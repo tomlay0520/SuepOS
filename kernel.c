@@ -64,13 +64,14 @@ void start_kernel(void)
     display_welcome();
 
     init_page_allocator();
-    // page_test();
+    page_test();
     scheduler_init();
     // CREATE_A_PROCESS(shell);
     // CREATE_A_PROCESS(test_task01);
     // CREATE_A_PROCESS(shell);
     CREATE_A_PROCESS(test_task01);
     CREATE_A_PROCESS(test_task02);
+    CREATE_A_PROCESS(test_task03);
     mini_printf("here?\n");
     scheduler();
     mini_printf("GUESS WHAT NOBODY CARES!\n");
