@@ -66,9 +66,6 @@ void start_kernel(void)
     init_page_allocator();
     page_test();
     scheduler_init();
-    // CREATE_A_PROCESS(shell);
-    // CREATE_A_PROCESS(test_task01);
-    // CREATE_A_PROCESS(shell);
     CREATE_A_PROCESS(test_task01);
     CREATE_A_PROCESS(test_task02);
     CREATE_A_PROCESS(test_task03);
