@@ -1,0 +1,49 @@
+--Welcome to SUEP Operating System--
+Press Ctrl-A and then X to exit QEMU
+------------------------------------
+Kernel is starting...
+   _|_|_|  _|    _|  _|_|_|_|  _|_|_|           _|_|      _|_|_|  
+ _|        _|    _|  _|        _|    _|       _|    _|  _|        
+   _|_|    _|    _|  _|_|_|    _|_|_|         _|    _|    _|_|    
+       _|  _|    _|  _|        _|             _|    _|        _|  
+ _|_|_|      _|_|    _|_|_|_|  _|               _|_|    _|_|_|    
+Initializing page allocator...
+Heap start: 0x80005000
+Heap end: 0x80105000
+Available heap size: 1048576 bytes
+Reserving 1 pages for page descriptors (256 bytes)
+Total available pages for allocation: 255
+Debug - TEXT_ENTRY: 0x80000000
+Debug - TEXT_END: 0x80003d9c
+Debug - HEAP_ENTRY: 0x80005000
+Debug - HEAP_END: 0x80105000
+TEXT:    0x0x80000000 -> 0x0x80003d9c
+RODATA:  0x0x80003d9c -> 0x0x8000449e
+DATA:    0x0x800044a0 -> 0x0x800044e0
+BSS:     0x0x800044e0 -> 0x0x800047dc
+HEAP:    0x0x80005000 -> 0x0x80105000
+Page allocator initialized.
+=== Page Allocation Test ===
+Allocated 2 pages at: 0x80007000
+Allocated 3 pages at: 0x80009000
+Allocated 1 page at: 0x8000c000
+Freeing p2...
+Allocated 4 pages at: 0x80009000
+=== Test Completed ===
+Scheduler initialized with 5 PCBs
+Created process 1 at PCB[0]
+Created process 2 at PCB[1]
+Created process 3 at PCB[2]
+here?
+Queue: 1(R) 2(R) 3(R) 
+test01
+Queue: 2(R) 3(R) 1(R) 
+test02
+Queue: 3(R) 1(R) 2(R) 
+hello world!
+Queue: 1(R) 2(R) 3(R) 
+test01
+Queue: 2(R) 3(R) 1(R) 
+test02
+QEMU: Terminated
+
