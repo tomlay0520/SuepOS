@@ -11,19 +11,19 @@ typedef enum {
 } ProcState;
 
 typedef struct PCB {
-    void (*entry)(void);       // 入口函数指针
-    CONTEXT context;           // 上下文
-    uint8_t* stack;            // 栈指针
-    ProcState state;           // 状态
-    int pid;                   // 进程ID
-    struct PCB* next;          // 下一个PCB
+    void (*entry)(void);       // func pointer
+    CONTEXT context;           // context
+    uint8_t* stack;            // stack ptr
+    ProcState state;           // state 
+    int pid;                   // process id
+    struct PCB* next;          // next pcb
 } PCB;
 
 // 进程队列
 typedef struct {
-    PCB* head;                 // 队首
-    PCB* tail;                 // 队尾
-    int count;                 // 计数
+    PCB* head;                 // head
+    PCB* tail;                 // tail 
+    int count;                 // sum
 } ProcQueue;
 
 extern void shell();
@@ -51,14 +51,13 @@ static PCB pcb_pool[MAX_PROCESS];
 static int next_pid = 1;
 static PCB* current_running = NULL;
 
-// 初始化队列
+
 static void init_queue() {
     pcb_queue.head = NULL;
     pcb_queue.tail = NULL;
     pcb_queue.count = 0;
 }
 
-// 入队
 static void enqueue(PCB* pcb) {
     if (!pcb_queue.head) {
         pcb_queue.head = pcb;
@@ -71,7 +70,6 @@ static void enqueue(PCB* pcb) {
     pcb_queue.count++;
 }
 
-// 出队
 static PCB* dequeue() {
     if (!pcb_queue.head) return NULL;
     
@@ -121,13 +119,12 @@ int CREATE_A_PROCESS(void (*s)(void)) {
         return 0;
     }
 
-    // 查找可用PCB
     PCB* pcb = NULL;
     for (int i = 0; i < MAX_PROCESS; i++) {
         int index = (next_pcb_index + i) % MAX_PROCESS;
         if (pcb_pool[index].state == PROC_FINISHED || pcb_pool[index].state == 0) {
             pcb = &pcb_pool[index];
-            next_pcb_index = (index + 1) % MAX_PROCESS;  // 更新下一个索引
+            next_pcb_index = (index + 1) % MAX_PROCESS; 
             break;
         }
     }
