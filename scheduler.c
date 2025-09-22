@@ -142,7 +142,7 @@ int CREATE_A_PROCESS(void (*s)(void)) {
     pcb->context.sp = (reg)((uint8_t*)stack_page + PAGE_SIZE) & ~0xF;
     pcb->context.ra = (reg)s;
 
-    mini_printf("Created process %d at PCB[%ld]\n", 
+    mini_printf("Created process %d at PCB[%d]\n", 
                 pcb->pid, pcb - pcb_pool);
     
     enqueue(pcb);
