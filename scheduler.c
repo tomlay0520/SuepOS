@@ -174,6 +174,8 @@ void scheduler_init(void) {
     mini_printf("Scheduler initialized with %d PCBs\n", MAX_PROCESS);
 }
 
+
+// make RUNNING state -> REDAY state
 void process_give_up(void) {
     if (current_running && current_running->state == PROC_RUNNING) {
         current_running->state = PROC_READY;
@@ -218,17 +220,20 @@ void delay(int count) {
     }
 }
 
-void process_exit(void) {
-    if (current_running) {
+
+// make RUNNING state -> FINISHED state
+void process_exit(void)
+{
+    if (current_running){
         void* stack_to_free = current_running->stack;
         int pid_to_free = current_running->pid;
-        
+
         current_running->state = PROC_FINISHED;
         remove_from_queue(current_running);
-        
         mini_printf("Process %d exiting\n", pid_to_free);
-        scheduler();
-        
         page_free(stack_to_free);
+        scheduler();
+        while (1);
+        
     }
 }
