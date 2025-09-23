@@ -84,6 +84,7 @@ static PCB* dequeue() {
     front->next = NULL;
     return front;
 }
+
 static void remove_from_queue(PCB* pcb) {
     if (!pcb_queue.head || !pcb) return;
     
