@@ -5,12 +5,14 @@ void test_task01(void){
         mini_printf("test01\n");
         delay(5000);
         process_give_up(); 
+        process_exit();
 }
 
 void test_task02(void){
-    process_give_up();
+        process_give_up();
         mini_printf("test02\n");
         delay(5000);
+        process_exit();
 }
 
 void test_task03(void){
@@ -18,4 +20,5 @@ void test_task03(void){
         delay(5000);
         process_give_up();
         mini_printf("hello world no.2 \n");
+        process_exit();
 }
