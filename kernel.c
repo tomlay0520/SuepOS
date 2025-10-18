@@ -6,7 +6,7 @@ BEFORE STARTING KERNEL,
 you should know that:
 1. memory allocation:
     - kernel is loaded at 0x80000000
-    - user program is loaded at 0x80400000
+    - user program is loaded at 0x84000000
 
 2. memory-mapped I/O addresses:
     - CLINT is at 0x02000000

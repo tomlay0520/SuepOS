@@ -43,7 +43,7 @@ void execute_command(int argc, char *argv[])
     uart0_put_string("'");
     uart0_put_string(argv[0]);
     uart0_put_string("'");
-    uart0_put_string(" command not found, please do resgistration.");
+    uart0_put_string(" command not found, please do registration.");
     uart0_put_string("\ninput 'help' to check all commands.\n");
 }
 
@@ -98,7 +98,7 @@ void shell(void)
     uart0_init();
     
     uart0_put_string("\nSuep OS Shell v1.0\n");
-    uart0_put_string("input 'help' to cheack all commands.\n");
+    uart0_put_string("input 'help' to check all commands.\n");
     
     while (1) {
         uart0_put_string("kernel@SuepOS: ");

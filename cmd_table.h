@@ -11,11 +11,11 @@ void cmd_clear(int argc, char *argv[]);
 void cmd_info(int argc, char *argv[]);
 // void cmd_exec(int argc, char *argv[]);
 
-// TABLE OF REGESTRATION FOR COMMANDS
+// TABLE OF REGISTRATION FOR COMMANDS
 command commands[] = {
     {"help", cmd_help, "show help info"},
-    {"echo", cmd_echo, "retrun parameters"},
-    {"clear", cmd_clear, "clear all indfo"},
+    {"echo", cmd_echo, "return parameters"},
+    {"clear", cmd_clear, "clear all info"},
     {"info", cmd_info, "view the system-info"},
     // {"./", cmd_exec, "execute the file"},
     {NULL, NULL, NULL} 
