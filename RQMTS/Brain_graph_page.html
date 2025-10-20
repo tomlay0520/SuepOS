@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>森林小径 · 知识笔记</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      background-color: #f9fbf8;
+      color: #2e7d32;
+      line-height: 1.7;
+      padding: 3rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #2e7d32;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #689f38;
+      margin-top: 0.5rem;
+    }
+
+    .content section {
+      margin-bottom: 2.5rem;
+    }
+
+    .content h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #388e3c;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .content p {
+      margin-bottom: 0.8rem;
+      color: #4caf50;
+    }
+
+    .content a {
+      display: inline-block;
+      margin-top: 0.6rem;
+      color: #2e7d32;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px dotted #81c784;
+    }
+
+    .content a:hover {
+      color: #1b5e20;
+      border-bottom-style: solid;
+    }
+
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #81c784;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 2rem 1.2rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .content h2 {
+        font-size: 1.35rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌲 森林小径</h1>
+    <p class="subtitle">在知识的林间，探索系统之根</p>
+  </header>
+
+  <div class="content">
+    <section>
+      <h2>🌿 SuepOS 系统文档使用指南</h2>
+      <p><strong>Main Page</strong>：当前为空，可暂时忽略。</p>
+      <p><strong>Related Pages</strong>：点击后可查看项目整体介绍（推荐先看）。</p>
+      <p><strong>Data Structures</strong>：列出所有核心结构体（如 <code>PCB</code>、<code>Page</code>、<code>ProcQueue</code>），点击可查看字段与关联函数。</p>
+      <p><strong>Files</strong>：包含所有源码文件（<code>.c</code> / <code>.h</code>），支持跳转到具体实现与注释。</p>
+      <a href="https://yurongjin.github.io/SuepOS_Brain_Graph/" target="_blank">→ 进入 SuepOS 文档</a>
+    </section>
+
+    <section>
+      <h2>🌳 xv6 文件系统文档使用指南</h2>
+      <p><strong>Main Page</strong>：当前为空，无需关注。</p>
+      <p>重点查看 <strong>Files</strong> → 找到 <code>fs.c</code>、<code>file.c</code>、<code>bio.c</code> 等文件，点击函数名可跳转定义。</p>
+      <p>文档虽简，但函数与数据结构间的交叉引用仍有助于理解调用链。</p>
+      <a href="https://yurongjin.github.io/xv6-docs/" target="_blank">→ 进入 xv6 文件系统文档</a>
+    </section>
+  </div>
+
+  <footer>
+    <p>愿你在代码的森林中，找到属于自己的路径。</p>
+  </footer>
+</body>
+</html>
